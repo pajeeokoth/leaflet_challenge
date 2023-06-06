@@ -113,8 +113,8 @@ function createLegend(map){
     for (var i = 0; i < COLOR_DEPTHS.length; i++) {
       div.innerHTML += 
       labels.push(
-          '<i class ="box" style="background:' + COLOR_COLORS[i] + '"> Depth > </i> ' +
-      (COLOR_DEPTHS[i] ? COLOR_DEPTHS[i] : '+'));
+          '<i style="background:' + COLOR_COLORS[i] + '"> Depth < </i> ' + 
+      (COLOR_COLORS[i] ? COLOR_DEPTHS[i] : '+' ) + 'km');
 
   }
     div.innerHTML = labels.join('<br>');
