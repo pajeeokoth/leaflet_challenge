@@ -3,15 +3,14 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 const MIN_RADIUS = 2;
 const RADIUS_COEF = 3;
 const COLOR_DEPTHS = [10, 30, 50, 70, 90];
-const COLOR_COLORS = ['#ffd700', '#40e900', '#2cd600', '#e36c18', '#ff0000', '#750000']
+const COLOR_COLORS = ['#ffd700', '#40e900', '#00a500', '#e36c18', '#ff0000', '#750000']
 
 // Perform a GET request to the query URL/
 d3.json(queryUrl).then(function (data) {
   // Once we get a response, send the data.features object to the createFeatures function.
   //console.log(data);
-  let places = data.features
-  //console.log(places);
   createFeatures(data.features);
+  // createFeatures(data.features.slice(0,100));
 });
 
 function createFeatures(earthquakeData) {
@@ -103,7 +102,6 @@ function createMap(earthquakes) {
   createLegend(myMap);
 }
 
-
 function createLegend(map){
   let legend = L.control({
     position: 'bottomright'
@@ -111,12 +109,14 @@ function createLegend(map){
 
   function build_legend(){
     let div = L.DomUtil.create('div', 'info legend');
-    labels = ['<strong>COLOR_DEPTHS</strong>'];
-    for (let i = 0; i < COLOR_DEPTHS.length; i++){
+    labels = ['<strong>Depth</strong>'];
+    for (var i = 0; i < COLOR_DEPTHS.length; i++) {
       div.innerHTML += 
-      labels.push('<i style="background:>' + COLOR_COLORS[i] + '"></i>' +
+      labels.push(
+          '<i class ="box" style="background:' + COLOR_COLORS[i] + '"> Depth > </i> ' +
       (COLOR_DEPTHS[i] ? COLOR_DEPTHS[i] : '+'));
-    }
+
+  }
     div.innerHTML = labels.join('<br>');
     return div;
   }
