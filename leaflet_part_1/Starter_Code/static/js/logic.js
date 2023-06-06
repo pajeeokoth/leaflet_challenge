@@ -1,16 +1,16 @@
 // Store our API endpoint as queryUrl.
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-const MIN_RADIUS = 5;
-const RADIUS_COEF = 4;
-const COLOR_DEPTHS = [10, 30, 50, 80];
-const COLOR_COLORS = ['#ffd700', '#ffb51e', '#e36c18', '#ff0000', '#750000']
+const MIN_RADIUS = 2;
+const RADIUS_COEF = 3;
+const COLOR_DEPTHS = [10, 30, 50, 70, 90];
+const COLOR_COLORS = ['#ffd700', '#40e900', '#2cd600', '#e36c18', '#ff0000', '#750000']
 
 // Perform a GET request to the query URL/
 d3.json(queryUrl).then(function (data) {
   // Once we get a response, send the data.features object to the createFeatures function.
   //console.log(data);
   let places = data.features
-  console.log(places);
+  //console.log(places);
   createFeatures(data.features);
 });
 
@@ -19,7 +19,7 @@ function createFeatures(earthquakeData) {
   // Define a function that we want to run once for each feature in the features array.
   // Give each feature a popup that describes the place and time of the earthquake.
   function onEachFeature(feature, layer) {
-       layer.bindPopup(`<h4>Epicenter:</h4><p>${feature.properties.place}</p><p>[${feature.geometry.coordinates}]</p><hr><h4>Magnitude:</h4><p>${feature.properties.mag}</p><hr><p>${new Date(feature.properties.time)}</p>`);
+       layer.bindPopup(`<h4>Epicenter:</h4><p>${feature.properties.place} <p>[${feature.geometry.coordinates[0]},${feature.geometry.coordinates[1]}]</p></p><hr>Magnitude:  ${feature.properties.mag}<p>Depth:  ${feature.geometry.coordinates[2]}km</p><hr><p>${new Date(feature.properties.time)}</p>`);
   }
   function pointToLayer(feature, latlng){
     return L.circleMarker(latlng);
@@ -43,17 +43,19 @@ function createFeatures(earthquakeData) {
         color = COLOR_COLORS[2];
       } else if (depth < COLOR_DEPTHS[3]){
         color = COLOR_COLORS[3];
-      } else {
+      } else if (depth < COLOR_DEPTHS[4]){
         color = COLOR_COLORS[4];
+      }else {
+        color = COLOR_COLORS[5];
       }
-      console.log(color);
+      //console.log(color);
       return color;
     }
 
     let style_dict = {
-      opacity: 1,
-      color: 'black', //border
-      fillOpacity: 0.7, 
+      opacity: 0.3,
+      color: '#0073cc', //border
+      fillOpacity: 0.65, 
       fillColor: get_color(feature),
       radius: get_radius(feature)
     }
@@ -108,10 +110,14 @@ function createLegend(map){
   });
 
   function build_legend(){
-    let div = L.DomUtil.create('div', 'legend');
+    let div = L.DomUtil.create('div', 'info legend');
+    labels = ['<strong>COLOR_DEPTHS</strong>'];
     for (let i = 0; i < COLOR_DEPTHS.length; i++){
-      div.innerHTML += '<i style="background:>' + COLOR_COLORS[i] + '"></i>';
+      div.innerHTML += 
+      labels.push('<i style="background:>' + COLOR_COLORS[i] + '"></i>' +
+      (COLOR_DEPTHS[i] ? COLOR_DEPTHS[i] : '+'));
     }
+    div.innerHTML = labels.join('<br>');
     return div;
   }
 
