@@ -109,7 +109,7 @@ function createLegend(map){
 
   function build_legend(){
     let div = L.DomUtil.create('div', 'info legend');
-    labels = ['<strong>Depth</strong>'];
+    labels = ['Earthquake Depth'];
     for (var i = 0; i < COLOR_DEPTHS.length; i++) {
       div.innerHTML += 
       labels.push(

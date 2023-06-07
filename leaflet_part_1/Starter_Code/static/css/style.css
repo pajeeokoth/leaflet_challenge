@@ -8,3 +8,17 @@ body,
 html {
   height: 100%;
 }
+
+/*legend*/
+.legend i {
+line-height: 10px;
+background-color: aliceblue;
+padding: 1px;
+border-radius: 0mm;
+}
+
+/*color*/
+.legend i {
+  width: 10px;
+  height: 10px;
+}
